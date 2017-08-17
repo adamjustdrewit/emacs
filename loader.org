@@ -165,6 +165,19 @@
     (set-face-attribute 'default nil :font "Source Code Pro")
     (add-hook 'prog-mode-hook 'command-log-mode)
     )
+
+(defun toggle-transparency ()
+   (interactive)
+   (let ((alpha (frame-parameter nil 'alpha)))
+     (set-frame-parameter
+      nil 'alpha
+      (if (eql (cond ((numberp alpha) alpha)
+                     ((numberp (cdr alpha)) (cdr alpha))
+                     ;; Also handle undocumented (<active> <inactive>) form.
+                     ((numberp (cadr alpha)) (cadr alpha)))
+               100)
+          '(97 . 80) '(100 . 100)))))
+ (global-set-key (kbd "C-c t") 'toggle-transparency)
 #+END_SRC
 
 #+RESULTS:
@@ -266,12 +279,18 @@
 (load-theme 'monokai t)
 (require 'nlinum)
 
+(set-face-background 'minibuffer-prompt "#F93B8E")
+
 (set-face-foreground 'linum "#717061")
 (set-face-background 'linum "#2F3330")
 
 (set-face-foreground 'cursor "#F2295D")
 (set-face-background 'cursor "#F93B8E")
 
+(set-face-attribute 'mode-line nil
+                    :box '(:line-width 5 :color "#2D2D2D"))
+(set-face-attribute 'mode-line-inactive nil
+                    :box '(:line-width 5 :color "#191919"))
 
 (setq org-src-fontify-natively t)
 ;; (load "~/mode-theme.el")
